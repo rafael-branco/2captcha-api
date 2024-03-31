@@ -1,42 +1,34 @@
 from twocaptcha import TwoCaptcha
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 # Don't forget to install the python module
 # pip install 2captcha-python
 
 def solve_funcaptcha(public_key, page_url, surl=None):
-    config = {
-        'server':           '2captcha.com',
-        'apiKey':           'YOUR_API_KEY',
-        'softId':            123,
-        'callback':         'https://your.site/result-receiver',
-        'defaultTimeout':    120,
-        'recaptchaTimeout':  600,
-        'pollingInterval':   10,
-    }
 
+    api_key = 'ab6ffd3f64502f12075260644905551f'
+    
+    config = {
+        'apiKey':            api_key,
+        'defaultTimeout':    240,
+    }
+    
+    print("Configurando API Key")
     solver = TwoCaptcha(**config)
 
     try:
-        result = solver.funcaptcha(
-            sitekey=public_key,
-            url=page_url,
-            surl=surl
-        )
+        print("Resolvendo Funcaptcha...")
+        result = solver.funcaptcha(sitekey=public_key, url=page_url, surl=surl)
 
     except Exception as e:
-        print("An error occurred:", e)
-        return None
+        print("Erro ao tentar resolver Funcaptcha")
+        print(e)
+        return False
+    else:
+        print("Resultado recebido do funcaptcha")
+        print('Resultado: ' + str(result))
+        return result
 
-    return result
 
-public_key = 'PUBLIC_KEY_FOR_FUNCAPTCHA'
-page_url = 'http://mysite.com/page/with/funcaptcha/'
-surl = 'https://client-api.arkoselabs.com'
-
-result = solve_funcaptcha(public_key, page_url, surl)
-
-if result:
-    token = result.get('code')
-    print("FunCaptcha Token:", token)
-else:
-    print("Failed to solve FunCaptcha.")
