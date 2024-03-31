@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 def solve_funcaptcha(public_key, page_url, surl=None):
 
-    api_key = 'ab6ffd3f64502f12075260644905551f'
+    api_key = 'c572dad22c39c8dae2789529499e2b40'
     
     config = {
         'apiKey':            api_key,
@@ -20,7 +20,15 @@ def solve_funcaptcha(public_key, page_url, surl=None):
 
     try:
         print("Resolvendo Funcaptcha...")
-        result = solver.funcaptcha(sitekey=public_key, url=page_url, surl=surl)
+        result = solver.funcaptcha(
+            sitekey=public_key, 
+            url=page_url, 
+            surl=surl,
+            proxy={
+                'type': 'HTTP',
+                'uri': 'uc672e6e756f805d0-zone-custom-region-rsa:uc672e6e756f805d0@43.152.113.55:2333'
+            }
+        )
 
     except Exception as e:
         print("Erro ao tentar resolver Funcaptcha")

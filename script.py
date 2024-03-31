@@ -92,6 +92,7 @@ def solve_website_funcaptcha(driver):
     while attempts < 5:
         print(f"Executando função solve funcaptcha - Tentativa [{str( attempts + 1 )}]")
         captcha_result = solve_funcaptcha(pk_value, get_url, surl_value)
+        print(pk_value, get_url, surl_value)
         if captcha_result:
             print("Processo do funcaptcha finalizado com sucesso!")
             print("\n########## Resultado Captcha ##########\n")
@@ -111,12 +112,14 @@ def solve_website_funcaptcha(driver):
             )
             print("Preparando script JS")
             script = f"document.querySelector('#verification-token').value = '{str(captcha_result['code'])}';"
+            time.sleep(0.5)
             print("Inserindo code no input")
             driver.execute_script(script)
+            time.sleep(0.5)
             driver.execute_script(
                 f"document.getElementsByName('fc-token')[0].value = '{str(captcha_result['code'])}';"
             )
-
+            time.sleep(0.5)
             print("Saindo das camadas do iframe")
             driver.switch_to.default_content()
 
@@ -127,7 +130,7 @@ def solve_website_funcaptcha(driver):
                 }}), "*");
             """
             driver.execute_script(script)
-
+            time.sleep(0.5)
             return captcha_result
         else:
             attempts += 1
@@ -140,6 +143,11 @@ def solve_website_funcaptcha(driver):
 
 
 print("iniciando navegador")
+
+# PROXY = 'uc672e6e756f805d0-zone-custom-region-rsa:uc672e6e756f805d0@43.152.113.55:2333'
+
+# firefox_options = webdriver.FirefoxOptions()
+# firefox_options.add_argument(f'--proxy-server={PROXY}')
 driver = webdriver.Firefox()
 
 # abrir twitter
@@ -407,10 +415,18 @@ except:
 
 
 try:
+    
+    dropdown_element = wait.until(
+        EC.element_to_be_clickable(
+            (
+                By.XPATH,
+                '//*[@id="SELECTOR_1"]'
+            )
+        )
+    )
 
     # Localize o elemento dropdown
-    dropdown_element = driver.find_element(By.XPATH, '//*[@id="SELECTOR_1"]')
-    print("data imcompleta")
+    print("data incompleta")
     print("Preenchendo Novamente")
     # Crie um objeto Select com o elemento dropdown
     dropdown = Select(dropdown_element)
@@ -678,6 +694,8 @@ try:
     elemento.click()
     print("Resolva a Verificação")
     solve_website_funcaptcha(driver)
+    
+    
 
 except:
     print("Oba não tem verificação")
